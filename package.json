@@ -1,0 +1,21 @@
+{
+  "name": "assetrix",
+  "version": "0.1.0",
+  "description": "A part of Mycorium project: a self-hosted PWA (web app) for fast tracking of IT assets using QR / barcode scanning, event-based history, bulk scan operations.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/N0C7UAV37U5/assetrix.git"
+  },
+  "keywords": [
+    "asset",
+    "flow",
+    "tracker"
+  ],
+  "license": "Apache-2.0",
+  "author": "N0C7UAV37U5 <strix.solitarius@gmail.com>",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
