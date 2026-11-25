@@ -6,8 +6,9 @@ Self-hosted PWA для учёта IT-активов (часть экосисте
 Ключевая метрика: **любая операция ≤ 3–5 секунд со смартфона**.
 
 ## Source of truth
-- **`README.md`** — приоритетный источник спеки (Design & Scope MVP).
-- `res/INFO.md` — дополнительная детализация; при расхождении с README проигрывает.
+- **`01_sources/comp/assetrix_mvp_spec.md`** — приоритетный источник спеки (Design & Scope MVP).
+- `01_sources/raw/mvp_info.md` — дополнительная детализация; при расхождении со спекой проигрывает.
+- `README.md` — обзор проекта и карта папок; `Backlog.md` — задачи и открытые вопросы.
 
 ## Архитектура
 
@@ -109,6 +110,13 @@ id, device_id, event_type, note (optional), meta (JSONB), created_at, created_by
 6. API не даёт изменить/удалить событие (405/403)
 
 ## Статус проекта (2026-04-27)
-- `backend/` и `frontend/` — **пустые**, код ещё не написан
+- Код ещё не написан; папок `backend/` и `frontend/` в репозитории нет
 - Dev-окружение: 4 Linux-сервера, настраиваются через Ansible с Linux-лаптопа. Настройка запланирована на 2026-04-28.
 - Открытые вопросы перед стартом кода: менеджер зависимостей Python, версия Python, QR-библиотека для браузера, формат asset_tag.
+
+## Working Conventions
+
+- Numbered folders hold materials; application code lives in its own folders at the root
+- Record tasks and known defects in `Backlog.md`
+- Move obsolete files to `06_archive/` instead of deleting them
+- New file and folder names: lowercase, no spaces, `_`/`-` separators
