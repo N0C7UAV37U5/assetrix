@@ -4,11 +4,16 @@ Self-hosted PWA for fast tracking of IT assets using QR / barcode scanning, even
 
 ## Project summary
 
-Stage: design. No application code yet.
+Stage: design. No application code yet. A Python pilot is planned first, the final version in Rust.
 
-Planned stack: React PWA, FastAPI (Python), PostgreSQL, Caddy, Docker.
+Assetrix is a tool of the Mycorium ecosystem and a future module of FlowERP. See [`04_documentation/ecosystem_overview.md`](04_documentation/ecosystem_overview.md) and [`04_documentation/decisions_log.md`](04_documentation/decisions_log.md).
 
-Specification (in Russian): [`01_sources/comp/assetrix_mvp_spec.md`](01_sources/comp/assetrix_mvp_spec.md). Additional details: [`01_sources/raw/mvp_info.md`](01_sources/raw/mvp_info.md); the specification takes precedence.
+Planned stack:
+- Pilot: FastAPI + Jinja + htmx + SQLite (Python)
+- Final: Axum + Askama + htmx, sqlx (Rust)
+- Both: Caddy, Docker
+
+Specification (in Russian): [`01_sources/comp/assetrix_mvp_spec.md`](01_sources/comp/assetrix_mvp_spec.md). Additional details: [`01_sources/raw/mvp_info.md`](01_sources/raw/mvp_info.md); the specification takes precedence. Decisions dated 2026-11-26 in the decisions log override parts of the specification until it is revised.
 
 ## Project location & access
 
