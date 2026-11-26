@@ -47,6 +47,7 @@ Newest last. Statuses: `accepted` · `open` · `superseded`.
   1. *Development:* `http://localhost` is a secure context, so the laptop webcam works without certificates; an Android phone reaches the dev machine over USB with `adb reverse tcp:8000 tcp:8000`.
   2. *Phone trials:* free DNS with an API — deSEC.io (`caddy-dns/desec`), DuckDNS (`caddy-dns/duckdns`, less reliable) — gives a real wildcard certificate through DNS-01 with the same setup as Porkbun; moving to the bought domain only swaps the Caddy module and the name.
   3. *Fallback:* `sslip.io` / `nip.io` names (e.g. `192-168-1-10.sslip.io`) + Caddy `tls internal`, with Caddy's root certificate installed on test phones. No public certificate is possible there: their DNS is not ours (no DNS-01) and a private IP is unreachable for HTTP-01.
+- **Status of option 2 (2026-11-26):** deSEC has suspended `dedyn.io` registrations until further notice (abuse wave); a deSEC account is useful only for hosting DNS of an own domain. DuckDNS signs in only through Google, GitHub, X/Twitter or Reddit and gives single-level names (`<name>.duckdns.org`; deeper names resolve to the same IP). The author looks for a domain on their own.
 - **Rebinding check (2026-11-26):** the DNS on the author's work machine resolves `*.sslip.io` / `*.nip.io` to private IPs, so it does not block rebinding. Still to check from a phone on the work Wi-Fi.
 
 ## D8 — Asset identification: own code plus external identifiers
