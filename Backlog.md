@@ -38,7 +38,8 @@ Specification: [`01_sources/comp/assetrix_spec_v2.md`](01_sources/comp/assetrix_
 | 25 | Map the `Office` licence sheet for P3 | Low | new | Structure in `import_mapping_spare.md`, section 2; binding by inventory number or host name; report licences bound to PCs missing from `Summary` |
 | 26 | Protect licence keys before P3 | Medium | new | Encryption at rest or hidden display + reveal audit (D14) |
 | 27 | Discuss disassembly of donor PCs into parts | Medium | new | One accounting item "computer" becomes many part items: events, identifiers of parts, how accounting reflects it (write-off of the PC, recognition of parts, value split). First candidates: imported PCs with `ad_disabled` |
-| 28 | Clarify `Exclude` and empty status in the `Office` sheet | Low | new | Needed for P3 import (task 25) |
+| 28 | Investigate Office keys with activation errors | Low | new | Status meanings clarified (`import_mapping_spare.md`, section 2); the cause of activation errors is unknown |
+| 29 | Design transfer of assets to another legal entity of the group | Low | new | Disposal scenario for hardware and licences (e.g. PCs with their Office keys handed over); write-off with reason + receiving organization |
 
 ## Ideas / later
 
