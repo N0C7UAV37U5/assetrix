@@ -109,7 +109,7 @@ Rust-трек (утилита QR-генератора) идёт параллел
 | `categories` | `id`, `name` (unique) | Плоский справочник |
 | `ledger_types` | `id`, `code`, `name` | Типы активов по бухгалтерии |
 | `departments` | `id`, `name`, `organization_id` | |
-| `persons` | `id`, `full_name`, `department_id`, `external_id` (ID в Vikarina), `login` (AD), `email`, `is_active` | Источник — Vikarina (MS SQL); `login` нужен для сопоставления владельцев при импорте |
+| `persons` | `id`, `full_name`, `department_id`, `external_id` (ID в Vikarina), `login` (AD), `email`, `is_active` | Источник — Vikarina (MS SQL). `login` = часть `email` до `@`; без email — транслитерация «имя.фамилия» в ASCII |
 | `locations` | `id`, `parent_id`, `name`, `kind` (`site`/`building`/`floor`/`room`/`other`) | Дерево произвольной глубины |
 | `warehouses` | `id`, `name`, `kind` (`virtual`/`physical`), `location_id` (необязательно), `is_archived` | Раздел 4.5 |
 | `department_warehouses` | `department_id`, `warehouse_id`, `is_default` | Связь многие-ко-многим |
@@ -340,7 +340,7 @@ Rust-трек (утилита QR-генератора) идёт параллел
 - Вход, роли, несколько пользователей (→ P2).
 - Адресация складов, распределение, условия хранения (→ pro).
 - Лицензии и сертификаты (→ P3).
-- Комплектующие и сборки: связи «актив в составе актива», `INSTALLED`/`REMOVED`.
+- Комплектующие и сборки: связи «актив в составе актива», `INSTALLED`/`REMOVED`; разборка ПК-донора на запчасти и её отражение в бухгалтерии (отдельное обсуждение, Backlog 27).
 - Передача с подтверждением получателем, резерв (→ P2).
 - Интеграции с Axapta и AD; живая синхронизация с Vikarina.
 - Оффлайн, расходные материалы, закупки.

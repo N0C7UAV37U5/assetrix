@@ -29,14 +29,16 @@ Specification: [`01_sources/comp/assetrix_spec_v2.md`](01_sources/comp/assetrix_
 | 16 | Collect and categorise asset types | High | new | Gather asset types across the company, categorise and parametrise them; derive types, categories, required and optional fields. Until then: fixed minimum fields + `attributes` JSON |
 | 17 | Buy a domain and set up HTTPS | High | new | Short domain at Porkbun; Caddy + `caddy-dns/porkbun`, wildcard `*.lab.<domain>` via DNS-01; check DNS rebinding on work Wi-Fi (D7) |
 | 18 | Choose and buy a label printer | Medium | new | Thermal transfer, resin + polyester, 300 dpi, network, ZPL (D11); fixes the label size |
-| 19 | Prepare the Excel import mapping | High | review | Draft in `01_sources/comp/import_mapping_spare.md`; open questions there (statuses `Disabled`/`Preparing`, rows without status, AD login source, meaning of `Exclude`) |
-| 20 | Write the Vikarina employee export query | Medium | new | MS SQL → CSV: external id, full name, department, AD login, email, active. If Vikarina has no AD login — join with an AD export |
+| 19 | Prepare the Excel import mapping | High | done | `01_sources/comp/import_mapping_spare.md`; `Summary` sheet fully mapped, import all rows |
+| 20 | Write the Vikarina employee export query | Medium | new | MS SQL → CSV: external id, full name, department, email, active. No AD login in Vikarina: `login` = email local part, fallback ASCII transliteration `name.surname` |
 | 21 | Implement pilot P1.0 | High | new | Spec v2, sections 4–9; DoD in section 11 |
 | 22 | Implement inventory P1.1 | High | new | Spec v2, section 6.4 |
 | 23 | Prompt for assets on a person's department change | Medium | new | P1.x; spec v2, section 5.4 |
 | 24 | Keep real data out of git | High | done | `.gitignore` for Excel/CSV/DB/backup files (D15); `Spare.xlsx` stays local |
 | 25 | Map the `Office` licence sheet for P3 | Low | new | Structure in `import_mapping_spare.md`, section 2; binding by inventory number or host name; report licences bound to PCs missing from `Summary` |
 | 26 | Protect licence keys before P3 | Medium | new | Encryption at rest or hidden display + reveal audit (D14) |
+| 27 | Discuss disassembly of donor PCs into parts | Medium | new | One accounting item "computer" becomes many part items: events, identifiers of parts, how accounting reflects it (write-off of the PC, recognition of parts, value split). First candidates: imported PCs with `ad_disabled` |
+| 28 | Clarify `Exclude` and empty status in the `Office` sheet | Low | new | Needed for P3 import (task 25) |
 
 ## Ideas / later
 
