@@ -43,6 +43,11 @@ Newest last. Statuses: `accepted` · `open` · `superseded`.
 - **Why:** the company DNS is not under our control; the camera API needs a secure context; a wildcard certificate keeps host names out of Certificate Transparency logs.
 - **Risk:** some DNS resolvers block public names that resolve to private IPs (DNS rebinding protection). Check once from a phone on the work Wi-Fi; fallback is a local CA installed on the phones.
 - **Later:** a VPS for a public demo, a VPN hub, CI or off-site backups. Work data (employee names, assignments) stays on the work server.
+- **Interim options until the domain is bought (2026-11-26):**
+  1. *Development:* `http://localhost` is a secure context, so the laptop webcam works without certificates; an Android phone reaches the dev machine over USB with `adb reverse tcp:8000 tcp:8000`.
+  2. *Phone trials:* free DNS with an API — deSEC.io (`caddy-dns/desec`), DuckDNS (`caddy-dns/duckdns`, less reliable) — gives a real wildcard certificate through DNS-01 with the same setup as Porkbun; moving to the bought domain only swaps the Caddy module and the name.
+  3. *Fallback:* `sslip.io` / `nip.io` names (e.g. `192-168-1-10.sslip.io`) + Caddy `tls internal`, with Caddy's root certificate installed on test phones. No public certificate is possible there: their DNS is not ours (no DNS-01) and a private IP is unreachable for HTTP-01.
+- **Rebinding check (2026-11-26):** the DNS on the author's work machine resolves `*.sslip.io` / `*.nip.io` to private IPs, so it does not block rebinding. Still to check from a phone on the work Wi-Fi.
 
 ## D8 — Asset identification: own code plus external identifiers
 - **Date:** 2026-11-26 · **Status:** accepted
