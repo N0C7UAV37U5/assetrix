@@ -2,7 +2,7 @@
 
 - **Дата:** 2026-11-26
 - **Заменяет:** [`06_archive/assetrix_mvp_spec_v1.md`](../../06_archive/assetrix_mvp_spec_v1.md)
-- **Связано:** [`decisions_log.md`](../../04_documentation/decisions_log.md) (D1–D16), [`import_mapping_spare.md`](import_mapping_spare.md), [`ecosystem_overview.md`](../../04_documentation/ecosystem_overview.md), [`mvp_info.md`](../raw/mvp_info.md) (исходные заметки; проигрывает этому документу)
+- **Связано:** [`decisions_log.md`](../../04_documentation/decisions_log.md) (D1–D18), [`domains_setup.md`](../../04_documentation/domains_setup.md), [`import_mapping_spare.md`](import_mapping_spare.md), [`ecosystem_overview.md`](../../04_documentation/ecosystem_overview.md), [`mvp_info.md`](../raw/mvp_info.md) (исходные заметки; проигрывает этому документу)
 
 ---
 
@@ -49,9 +49,19 @@ Rust-трек (утилита QR-генератора) идёт параллел
 | QR для этикеток | `segno` (SVG) | Позже — Rust-утилита QR-генератора |
 | Excel-импорт | `openpyxl` | XLSX и CSV |
 | PWA | manifest + минимальный service worker | Без оффлайна |
-| Прокси и HTTPS | Caddy с модулем `caddy-dns/porkbun` (сборка через `xcaddy`) | Wildcard-сертификат `*.lab.<домен>` через DNS-01, см. D7 |
+| Прокси и HTTPS | Caddy с модулем `caddy-dns/porkbun` (сборка через `xcaddy`) | Сертификаты через DNS-01: `ut.flowerp.app` (работа), `*.lab.mycorium.org` (хоумлаб); D7, D18, [`domains_setup.md`](../../04_documentation/domains_setup.md) |
 | Развёртывание | Docker Compose на Linux-хосте | Хоумлаб и рабочий сервер |
 | Бэкап | `sqlite3 .backup` по cron | В отдельный каталог/том |
+
+### 3.1. Адреса и базовый путь (D17)
+
+- **Схема:** предприятие — в имени хоста, модуль — в пути: `https://ut.flowerp.app/assetrix/`. Тестовые инстансы: `https://<имя>.lab.mycorium.org/assetrix/`.
+- **Приложение не должно считать, что работает в корне сайта:**
+  - FastAPI `root_path` из переменной окружения;
+  - все ссылки в шаблонах и htmx строятся от базового пути, без жёстко прописанных `/...`;
+  - `scope` PWA-манифеста и service worker — базовый путь модуля;
+  - у cookie задан `path`.
+- **Каждый инстанс** — отдельный `docker compose` проект со своим SQLite-файлом и `.env`.
 
 ---
 
@@ -98,7 +108,7 @@ Rust-трек (утилита QR-генератора) идёт параллел
 - **Длина:** 7 случайных символов + 1 контрольный (Luhn mod 32). Это ≈ 34 млрд значений; при вставке выполняется проверка на коллизию.
 - **Отображение:** `K7F2-9QXM`.
 - **Ввод:** регистр и `-` игнорируются; `O`→`0`, `I`/`L`→`1`.
-- **В QR кодируется URL:** `https://<хост>/a/K7F29QXM`. Обычная камера телефона открывает карточку актива, а сканер Assetrix извлекает код из URL.
+- **В QR кодируется URL:** `https://<предприятие>.flowerp.app/a/K7F29QXM` — постоянный короткий путь в корне предприятия, который перенаправляет в модуль (D17). Обычная камера телефона открывает карточку актива, а сканер Assetrix извлекает код из URL.
 - Формат предварительный и проверяется на пилоте.
 
 ### 4.4. Справочники и оргструктура
@@ -316,7 +326,7 @@ Rust-трек (утилита QR-генератора) идёт параллел
 ### P1.0
 
 1. `docker compose up` разворачивает систему на Linux-хосте.
-2. Телефон открывает её по имени `*.lab.<домен>` с валидным HTTPS — дома и на работе.
+2. Телефон открывает её с валидным HTTPS — `ut.flowerp.app/assetrix/` на работе и `*.lab.mycorium.org/assetrix/` дома; приложение работает под базовым путём (3.1).
 3. Камера телефона (Android и iOS) и USB-сканер находят актив по QR, `invent_num` и серийнику.
 4. Реальные данные импортированы из Excel IT-отдела; сотрудники — из выгрузки Vikarina.
 5. Работает админка складов и местоположений (4.5).

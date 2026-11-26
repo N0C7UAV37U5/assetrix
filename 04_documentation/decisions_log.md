@@ -49,6 +49,28 @@ Newest last. Statuses: `accepted` · `open` · `superseded`.
   3. *Fallback:* `sslip.io` / `nip.io` names (e.g. `192-168-1-10.sslip.io`) + Caddy `tls internal`, with Caddy's root certificate installed on test phones. No public certificate is possible there: their DNS is not ours (no DNS-01) and a private IP is unreachable for HTTP-01.
 - **Status of option 2 (2026-11-26):** deSEC has suspended `dedyn.io` registrations until further notice (abuse wave); a deSEC account is useful only for hosting DNS of an own domain. DuckDNS signs in only through Google, GitHub, X/Twitter or Reddit and gives single-level names (`<name>.duckdns.org`; deeper names resolve to the same IP). The author looks for a domain on their own.
 - **Rebinding check (2026-11-26):** the DNS on the author's work machine resolves `*.sslip.io` / `*.nip.io` to private IPs, so it does not block rebinding. Still to check from a phone on the work Wi-Fi.
+- **Update 2026-11-26:** domains bought at Porkbun — `flowerp.app`, `flowerp.org` (`.com` was taken); `mycorium.org` was already owned. Roles: D18. Interim options above are no longer needed once the setup in [`domains_setup.md`](domains_setup.md) is done.
+
+## D17 — URL scheme: tenant in the host name, module in the path
+- **Date:** 2026-11-26 · **Status:** accepted
+- **Decision:** one host name per tenant (enterprise) instance, modules as paths: `ut.flowerp.app/assetrix`, later `ut.flowerp.app/<module>`. Labels use a short permanent path at the tenant root, `https://<tenant>.flowerp.app/a/<asset_code>`, redirected to the asset module.
+- **Why:** the tenant is the boundary of data, users and server; one origin per tenant gives one login, one camera permission and one wildcard certificate for all tenants. Labels live for years and must survive module renames, the Rust rewrite and the FlowERP merge.
+- **Consequence for code:** applications never assume they run at `/` — FastAPI `root_path`, all template and htmx links relative to the base path, PWA manifest and service worker `scope` = `/assetrix/`, cookie path set. Caddy strips the prefix with `handle_path`.
+- **Exceptions:** shared services not tied to a tenant may get their own host name (`docs.`, a public demo, a public QR API).
+
+## D18 — Domain roles
+- **Date:** 2026-11-26 · **Status:** accepted
+- **Decision:**
+
+| Domain | Role | Examples |
+|---|---|---|
+| `flowerp.app` | Running product instances (D17) | `ut.flowerp.app/assetrix` — the work pilot; later `<customer>.flowerp.app` |
+| `flowerp.org` | Public face: product site, documentation, community | `flowerp.org`, `docs.flowerp.org` |
+| `mycorium.org` | Ecosystem umbrella + lab | `mycorium.org`; `*.lab.mycorium.org` — homelab and test instances, e.g. `acme.lab.mycorium.org/assetrix` |
+
+- **Why:** experiments and private-IP records stay off the product domains; `.app` reads as "a running application" and enforces HTTPS (HSTS preload), `.org` fits an open-core project.
+- **Certificates:** each host gets only the names it serves — the work server `ut.flowerp.app`, the homelab `*.lab.mycorium.org`. No product-wide wildcard on a single server.
+- **Setup steps:** [`domains_setup.md`](domains_setup.md).
 
 ## D8 — Asset identification: own code plus external identifiers
 - **Date:** 2026-11-26 · **Status:** accepted

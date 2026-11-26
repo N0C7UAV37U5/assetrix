@@ -9,7 +9,7 @@ Self-hosted PWA для учёта активов (часть экосистем�
 
 ## Source of truth
 - **`01_sources/comp/assetrix_spec_v2.md`** — спецификация пилота: модель данных, переходы, этапы, DoD. Приоритетный источник.
-- `04_documentation/decisions_log.md` — решения D1–D16 и их причины; `04_documentation/ecosystem_overview.md` — экосистема и конвенции.
+- `04_documentation/decisions_log.md` — решения D1–D18 и их причины; `04_documentation/ecosystem_overview.md` — экосистема и конвенции.
 - `01_sources/raw/mvp_info.md` — исходные заметки; проигрывает спеке. Спека v1 — в `06_archive/`.
 - `01_sources/comp/import_mapping_spare.md` — маппинг Excel IT-отдела (`Spare.xlsx`) на модель.
 - `Backlog.md` — задачи и открытые вопросы.
@@ -30,7 +30,13 @@ Self-hosted PWA для учёта активов (часть экосистем�
 ## Стек
 - **Пилот:** Python 3.12, `uv`, `ruff`, `pytest`; FastAPI + Jinja2 + htmx; SQLite (WAL); миграции на чистом SQL, совместимые с `sqlx migrate`; без ORM.
 - **Финал:** Rust (Axum + Askama + htmx, sqlx) + PostgreSQL.
-- **Общее:** Caddy (wildcard-сертификат через DNS-01 Porkbun), Docker Compose на Linux.
+- **Общее:** Caddy (`caddy-dns/porkbun`, сертификаты через DNS-01), Docker Compose на Linux.
+
+## Домены и адреса (D17, D18)
+- `flowerp.app` — инстансы: предприятие в имени, модуль в пути (`ut.flowerp.app/assetrix`); `flowerp.org` — сайт и документация; `mycorium.org` — экосистема и лаборатория (`*.lab.mycorium.org`).
+- Наклейки: постоянный `https://<предприятие>.flowerp.app/a/<код>`.
+- Код всегда работает под базовым путём (`root_path`, относительные ссылки, `scope` PWA, `path` cookie) — никогда не считать, что приложение в корне.
+- Настройка: `04_documentation/domains_setup.md`. Ключи Porkbun — только в локальном `.env`.
 
 ## UX-правила
 - Mobile-first, управление одной рукой, кнопки внизу экрана.
@@ -39,7 +45,7 @@ Self-hosted PWA для учёта активов (часть экосистем�
 
 ## Статус проекта (2026-11-26)
 - Код ещё не написан. Следующий шаг — каркас пилота (Backlog 6) и P1.0 (Backlog 21).
-- Домен для HTTPS ещё не куплен (Backlog 17); автор сообщит отдельно.
+- Домены куплены (`flowerp.app`, `flowerp.org`; `mycorium.org` был). Автор настраивает Porkbun дома (Backlog 30), затем — Caddy на серверах.
 - Маппинг импорта листа `Summary` готов (Backlog 19); лист `Office` — к P3.
 - Отложено к обсуждению: разборка ПК-доноров на запчасти и её бухгалтерия (Backlog 27).
 - Автор — новичок в Rust (опыт C++, C#/.NET, X++), Rust-решения объяснять.

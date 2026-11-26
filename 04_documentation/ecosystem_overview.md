@@ -22,6 +22,16 @@ Mycorium (umbrella ecosystem)
 - Target paths in the monorepo: `utils/<name>`, `tools/<name>`.
 - All asset accounting modules (scanning, equipment movement, licences, inventory) live in one repository, `assetrix`: they share one database and one event log.
 
+## Domains and URLs
+
+| Domain | Role |
+|---|---|
+| `flowerp.app` | Running product instances: `<tenant>.flowerp.app/<module>` |
+| `flowerp.org` | Product site, documentation, community |
+| `mycorium.org` | Ecosystem umbrella; `*.lab.mycorium.org` for the homelab and test instances |
+
+Tenant in the host name, module in the path; labels use the permanent `/a/<code>` path at the tenant root. Decisions D17, D18; setup in [`domains_setup.md`](domains_setup.md).
+
 ## Common conventions (from day one)
 
 So that the later merge is mechanical rather than a manual cleanup:
