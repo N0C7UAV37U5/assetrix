@@ -1,0 +1,30 @@
+# Real data never goes into git: the repository is public (decision D15).
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.ods
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.bak
+backups/
+data/
+
+# Local environment
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+target/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/settings.local.json

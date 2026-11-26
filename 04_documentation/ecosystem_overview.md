@@ -52,7 +52,7 @@ Later shared repositories (only when there is more than one consumer): `mycorium
 
 ## Assetrix scope
 
-Core entities: **Asset** (devices, licences, certificates), **Person**, **Department**, **Event** (immutable log).
+Core entities: **Asset** (devices, licences, certificates) with external **identifiers**, **Person**, **Department**, **Organization**, **Location** (tree), **Warehouse** (virtual or physical), **Event** (immutable log). Pilot specification: [`assetrix_spec_v2.md`](../01_sources/comp/assetrix_spec_v2.md).
 
 | Module | Adds |
 |---|---|
@@ -61,7 +61,7 @@ Core entities: **Asset** (devices, licences, certificates), **Person**, **Depart
 | Licences and certificates | Expiry dates, seats, assignment to people or assets, reminders and a dashboard |
 | Inventory | Reconciliation sessions (expected vs found), result report, one-click follow-up events; network scan as a separate collector |
 
-- Login and roles are needed already in the pilot (IT, accounting, department heads).
+- Login and roles come in pilot stage P2; P1 is single-user (D12).
 - Departments start as a plain attribute; reconciliation with 1C/ERP is undecided.
 
 ## Utilities

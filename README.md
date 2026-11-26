@@ -13,7 +13,7 @@ Planned stack:
 - Final: Axum + Askama + htmx, sqlx (Rust)
 - Both: Caddy, Docker
 
-Specification (in Russian): [`01_sources/comp/assetrix_mvp_spec.md`](01_sources/comp/assetrix_mvp_spec.md). Additional details: [`01_sources/raw/mvp_info.md`](01_sources/raw/mvp_info.md); the specification takes precedence. Decisions dated 2026-11-26 in the decisions log override parts of the specification until it is revised.
+Specification (in Russian): [`01_sources/comp/assetrix_spec_v2.md`](01_sources/comp/assetrix_spec_v2.md) — pilot scope, data model, stages and Definition of Done. Original notes: [`01_sources/raw/mvp_info.md`](01_sources/raw/mvp_info.md); the specification takes precedence. The first MVP specification is archived in [`06_archive/`](06_archive/).
 
 ## Project location & access
 
