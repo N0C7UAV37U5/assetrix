@@ -14,6 +14,22 @@
 
 Все три — у Porkbun, авто-продление включено.
 
+## Как это работает без VPS
+
+- **DNS:** публичная A-запись указывает на **локальный** IP сервера. Устройства во внутренней сети по этому имени попадают на сервер, снаружи адрес недостижим. Входящие подключения из интернета не нужны.
+- **Сертификат (DNS-01):** Caddy через API Porkbun создаёт TXT-запись `_acme-challenge`, Let's Encrypt проверяет её в публичном DNS и выдаёт сертификат, Caddy запись удаляет. Продление — само, примерно раз в 60 дней. Все соединения исходящие.
+- **Видно публично:** внутренний IP (в DNS) и имя хоста (в журналах Certificate Transparency). Риск низкий.
+
+## Состояние (2026-11-27)
+
+| Что | Статус |
+|---|---|
+| `flowerp.app`: API Access, API-ключ | Готово |
+| Рабочий сервер: исходящий HTTPS к `api.porkbun.com` и `acme-v02.api.letsencrypt.org` | Проверено, прокси не нужен |
+| Рабочий сервер: порты 80/443 | Свободны (стандартный Apache из установки Debian отключён) |
+| A-запись `ut.flowerp.app` | Следующий шаг |
+| `mycorium.org`: API Access, `*.lab` | Позже, для хоумлаба |
+
 ---
 
 ## Шаг 1. Porkbun: API-ключ (делает автор)
@@ -39,6 +55,10 @@
 | `mycorium.org` | A | `*.lab` | IP хоумлаба (локальный) | Все тестовые инстансы |
 | `flowerp.app`, `mycorium.org` | CAA | (корень) | `0 issue "letsencrypt.org"` | Необязательно: сертификаты выдаёт только Let's Encrypt |
 
+В интерфейсе: **Account → Domain Management** → строка домена → **Details** → **DNS**. В поле Host — только `ut` (окончание `.flowerp.app` Porkbun добавит сам), TTL по умолчанию.
+
+Для сервисов не из FlowERP на том же сервере (Grafana, Portainer, старые веб-интерфейсы) — одна запись `*.ut` → тот же IP; дальше новые имена (`grafana.ut.flowerp.app`) добавляются только в Caddyfile.
+
 Если Porkbun добавил записи-заглушки парковки (ALIAS корня и CNAME `*` на `pixie.porkbun.com`), их можно удалить на `flowerp.app`, чтобы произвольные имена не резолвились в парковку. Сайт на корне появится позже.
 
 ## Шаг 4. Проверка DNS
@@ -55,7 +75,22 @@ nslookup test.lab.mycorium.org
 
 Должны вернуться локальные IP. Если телефон в рабочем Wi-Fi имя не разрешает — DNS этой сети блокирует публичные имена с частными IP (DNS rebinding protection), см. D7.
 
-## Шаг 5. Сервер: ключи и Caddy
+## Шаг 5. Сервер: подготовка, ключи и Caddy
+
+### Подготовка сервера
+
+1. Исходящий доступ — оба запроса должны вернуть заголовки (404 у Porkbun нормально: у API нет страницы в корне):
+   ```
+   curl -sI https://api.porkbun.com
+   curl -sI https://acme-v02.api.letsencrypt.org/directory
+   ```
+2. Порты 80 и 443 свободны:
+   ```
+   sudo ss -tlnp | grep -E ':80|:443'
+   ```
+   Debian может поставить Apache при установке (tasksel «web server»). Если он не нужен: `sudo systemctl disable --now apache2`. Отдельный веб-сервер не нужен и потом: статику (`file_server`), PHP (`php_fastcgi`), контейнеры и другие машины сети (`reverse_proxy`) обслуживает Caddy.
+
+### Ключи
 
 На каждом сервере ключи лежат в `.env` рядом с `docker-compose.yml`. Файл в `.gitignore`, права `600`:
 
@@ -63,6 +98,39 @@ nslookup test.lab.mycorium.org
 PORKBUN_API_KEY=pk1_...
 PORKBUN_API_SECRET_KEY=sk1_...
 ```
+
+- Формат `KEY=значение`: без пробелов вокруг `=`, без кавычек и `export`.
+- Окончания строк только **LF**: с CRLF к ключу прилипает `\r`, и Porkbun отвечает ошибкой авторизации. Надёжнее создать файл на сервере (`nano .env`).
+- `.env` сам в контейнер не попадает — у сервиса `caddy` нужен `env_file: .env`.
+
+### Маршрутизация по контейнерам
+
+DNS указывает на сервер, а не на контейнер. Caddy — единственная точка входа: только он публикует порты 80/443, остальные контейнеры без `ports:`, в общей Docker-сети, доступны Caddy по имени сервиса.
+
+```yaml
+services:
+  caddy:
+    build: ./caddy
+    env_file: .env
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data          # сертификаты, не терять
+    networks: [web]
+
+  assetrix:
+    image: assetrix:latest
+    networks: [web]               # без ports: доступен только через Caddy
+
+networks:
+  web:
+volumes:
+  caddy_data:
+```
+
+Модули FlowERP — по пути (`/assetrix`, `/paginator`, D17); сторонние приложения, которые плохо работают под префиксом, — по отдельному имени (`grafana.ut.flowerp.app`).
+
+### Caddy
 
 Caddy собирается с модулем Porkbun (версии закрепляются при создании каркаса, Backlog 6):
 
@@ -117,8 +185,11 @@ ut.flowerp.app {
 
 ## Чек-лист
 
-- [ ] API-ключ создан и сохранён в менеджере паролей
-- [ ] API Access включён для `flowerp.app` и `mycorium.org`
+- [x] API-ключ создан и сохранён в менеджере паролей
+- [x] API Access включён для `flowerp.app`
+- [ ] API Access включён для `mycorium.org`
+- [x] Рабочий сервер: исходящий HTTPS к Porkbun и Let's Encrypt
+- [x] Рабочий сервер: порты 80/443 свободны
 - [ ] Записи `ut.flowerp.app` и `*.lab.mycorium.org` созданы
 - [ ] DNS проверен с ПК и с телефона в рабочем Wi-Fi
 - [ ] `.env` с ключами на серверах (права `600`)

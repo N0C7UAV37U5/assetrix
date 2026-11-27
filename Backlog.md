@@ -40,7 +40,7 @@ Specification: [`01_sources/comp/assetrix_spec_v2.md`](01_sources/comp/assetrix_
 | 27 | Discuss disassembly of donor PCs into parts | Medium | new | One accounting item "computer" becomes many part items: events, identifiers of parts, how accounting reflects it (write-off of the PC, recognition of parts, value split). First candidates: imported PCs with `ad_disabled` |
 | 28 | Investigate Office keys with activation errors | Low | new | Status meanings clarified (`import_mapping_spare.md`, section 2); the cause of activation errors is unknown |
 | 29 | Design transfer of assets to another legal entity of the group | Low | new | Disposal scenario for hardware and licences (e.g. PCs with their Office keys handed over); write-off with reason + receiving organization |
-| 30 | Porkbun: API key, API access, DNS records | High | new | Author, at home. Steps 1–4 in `04_documentation/domains_setup.md`: API key to a password manager; API Access on for `flowerp.app` and `mycorium.org`; A records `ut.flowerp.app`, `*.lab.mycorium.org`; check DNS from a phone on the work Wi-Fi |
+| 30 | Porkbun: API key, API access, DNS records | High | in progress | Done 2026-11-27: `flowerp.app` API key + API Access; work server reaches Porkbun and Let's Encrypt, ports 80/443 free. Remaining: A record `ut`, `mycorium.org`. Originally: Steps 1–4 in `04_documentation/domains_setup.md`: API key to a password manager; API Access on for `flowerp.app` and `mycorium.org`; A records `ut.flowerp.app`, `*.lab.mycorium.org`; check DNS from a phone on the work Wi-Fi |
 | 31 | Check the FlowERP name for conflicts | Low | new | Existing products and trademarks (EUIPO / TMview) before public launch |
 
 ## Ideas / later
