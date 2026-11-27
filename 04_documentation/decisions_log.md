@@ -50,6 +50,7 @@ Newest last. Statuses: `accepted` · `open` · `superseded`.
 - **Status of option 2 (2026-11-26):** deSEC has suspended `dedyn.io` registrations until further notice (abuse wave); a deSEC account is useful only for hosting DNS of an own domain. DuckDNS signs in only through Google, GitHub, X/Twitter or Reddit and gives single-level names (`<name>.duckdns.org`; deeper names resolve to the same IP). The author looks for a domain on their own.
 - **Rebinding check (2026-11-26):** the DNS on the author's work machine resolves `*.sslip.io` / `*.nip.io` to private IPs, so it does not block rebinding. Still to check from a phone on the work Wi-Fi.
 - **Update 2026-11-26:** domains bought at Porkbun — `flowerp.app`, `flowerp.org` (`.com` was taken); `mycorium.org` was already owned. Roles: D18. Interim options above are no longer needed once the setup in [`domains_setup.md`](domains_setup.md) is done.
+- **Update 2026-11-27:** `ut.flowerp.app` is set up; the company DNS returns the private IP, so it does not block rebinding. Phones on the guest Wi-Fi resolve the name but cannot reach the server (separate VLAN). Phone access: D19.
 
 ## D17 — URL scheme: tenant in the host name, module in the path
 - **Date:** 2026-11-26 · **Status:** accepted
@@ -71,6 +72,19 @@ Newest last. Statuses: `accepted` · `open` · `superseded`.
 - **Why:** experiments and private-IP records stay off the product domains; `.app` reads as "a running application" and enforces HTTPS (HSTS preload), `.org` fits an open-core project.
 - **Certificates:** each host gets only the names it serves — the work server `ut.flowerp.app`, the homelab `*.lab.mycorium.org`. No product-wide wildcard on a single server.
 - **Setup steps:** [`domains_setup.md`](domains_setup.md).
+
+## D19 — Deployment tracks and phone access for testing
+- **Date:** 2026-11-27 · **Status:** accepted
+- **Context:** `ut.flowerp.app` resolves to the work server's private IP from the work network. Phones there can join only the guest Wi-Fi, a separate VLAN with no route to the server. Allowing selected phones into the work network does not scale: scanning will later be done by many employees, not only IT.
+- **Decision:**
+  - We build the product. Two deployment tracks share one application, D17 URLs and Caddy as the single entry point; only the compose setup differs:
+    - *On-prem* (the employer): data on the internal server; later a VPS as the public entry, forwarding through a WireGuard tunnel opened from inside.
+    - *SaaS* (the product): tenant instances `<tenant>.flowerp.app` fully on a VPS.
+  - At work, for now: development and tests from a PC in the work network, scanning with a webcam.
+  - Phone tests: in the homelab (`*.lab.mycorium.org`), where the author controls the network.
+  - VPS: later, when public access is needed (P2, many users).
+- **Considered:** an own Wi-Fi access for IT phones (does not scale), a firewall rule from the guest VLAN (exposes employee data to guests), ZeroTier with a dedicated test phone (bypasses network segmentation; kept as a fallback, with a managed route `<server LAN IP>/32` via the server's ZeroTier IP so one name works in both networks).
+- **Consequences of public access (with the VPS):** proper logins (P2 roles) before many users; personal data under GDPR — employer consent, EU hosting, a DPA with the host; server hardening and backups.
 
 ## D8 — Asset identification: own code plus external identifiers
 - **Date:** 2026-11-26 · **Status:** accepted
